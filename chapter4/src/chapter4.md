@@ -98,7 +98,7 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     - OP_READ:请求当数据已经就绪,可以从Channel中读取时获得通知
     - ON_WRITE:请求当可以向Channel中写更多的数据时获得通知
 
-- 对于所有Netty的传输实现都共有的用户级别API完全地隐藏了这些NIO的内部细节,该处理流程如下
+- 对于所有Netty的传输实现都共有的用户级别API完全地隐藏了这些NIO的内部细节,选择并处理状态的变化如下
     - 新的Channel注册到选择器
     - 选择器处理状态变化的通知(之前已经注册的)
     - Selector.select()将会阻塞,直到接收到新的状态变化或者配置的超时时间已过时
@@ -120,6 +120,31 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
 
 - Netty的OIO传输实现代表了一种折中,它可以通过常规的传输API使用,但是由于它是建立在java.net包的阻塞实现之上的,所以它不是异步的.但是它仍然非常适合于某些用途
 
+- OIO处理逻辑
+    - 分配给Socket的线程
+    - 连接远程节点的Socket
+    - 读取操作(可能阻塞)
+    - 读取完成,处理刻度字节,尝试再次读取
+    - 执行其他提交
+
 ### 用于JVM内部通信的Local传输
 
 - Netty提供了一个Local传输,用于在同一个JVM中运行的客户端和服务器程序之间的异步通信
+    - 在这个传输中,和服务器Channel相关联的SocketAddress并没有绑定物理网络地址
+    - 只要服务器还在运行,它就会被存储在注册表里并在Channel关闭时注销,客户端无法再使用它
+    - 因为这个传输并不接受真正的网络流量,所以它并不能够和其他传输实现进行互操作
+
+### Embedded传输
+
+- Netty提供了一种额外的传输,使得你可以将一组ChannelHandler作为帮助器类嵌入到其他的ChannelHandler内部.
+- 通过这种方式,你将可以扩展一个ChannelHandler的功能,而又不需要修改其内部代码
+- embedded传输的关键是一个被称为EmbeddedChannel的具体的Channel实现(详见第九章)
+
+## 传输的用例
+
+- 非阻塞代码库或者一个常规的七点:NIO(或者Linux使用epoll)
+- 阻塞代码库:OIO
+- 同一个JVM内部通信:Local
+- 测试ChannelHandler的实现:Embedded
+
+
