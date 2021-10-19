@@ -2,7 +2,7 @@
 
 netty实战学习笔记
 
-- [实例源码](https://github.com/normanmaurer/netty-in-action)
+- [书中源码](https://github.com/normanmaurer/netty-in-action)
 
 ## 章节列表
 
@@ -13,3 +13,5 @@ netty实战学习笔记
 [第三章 Netty的组件和设计](chapter3/src/chapter3.md)
 
 [第四章 传输](chapter4/src/chapter4.md)
+
+[第五章 ByteBuf](chapter5/src/chapter5.md)
