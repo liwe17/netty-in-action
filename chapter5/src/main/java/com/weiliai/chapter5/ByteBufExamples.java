@@ -76,12 +76,27 @@ public class ByteBufExamples {
     }
 
 
-    public static void byteBufRelativeAccess(){
+    public static void byteBufRelativeAccess() {
 
     }
 
+    public static int aMethod(int i) throws Exception {
+        try {
+            return i / 10;
+        } catch (Exception ex) {
+            throw new Exception("exception in a Method");
+        } finally {
+            System.out.println("finally");
+        }
+    }
+
     public static void main(String[] args) {
-        List<String>
+        try {
+            aMethod(0);
+        } catch (Exception ex) {
+            System.out.println("exception in main");
+        }
+        System.out.println("finished");
     }
 
 }
