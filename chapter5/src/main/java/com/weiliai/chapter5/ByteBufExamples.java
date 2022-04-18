@@ -1,10 +1,18 @@
 package com.weiliai.chapter5;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.ByteProcessor;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 /**
  * chapter5 code
@@ -14,9 +22,13 @@ import java.nio.ByteBuffer;
  */
 public class ByteBufExamples {
 
+    private static final Random RANDOM = new Random();
+
     private static final ByteBuf HEAP_BUF_FROM_SOMEWHERE = Unpooled.buffer(1024);
 
     private static final ByteBuf DIRECT_BUF_FROM_SOMEWHERE = Unpooled.directBuffer(1024);
+
+    private static final Channel CHANNEL_FROM_SOMEWHERE = new NioSocketChannel();
 
     private static void handleArray(byte[] array, int offset, int len) {
     }
@@ -75,28 +87,106 @@ public class ByteBufExamples {
         handleArray(array, 0, array.length); // 使用偏移量和长度作为参数使用该数组
     }
 
-
+    // 5.6 Access data
     public static void byteBufRelativeAccess() {
-
-    }
-
-    public static int aMethod(int i) throws Exception {
-        try {
-            return i / 10;
-        } catch (Exception ex) {
-            throw new Exception("exception in a Method");
-        } finally {
-            System.out.println("finally");
+        ByteBuf buffer = HEAP_BUF_FROM_SOMEWHERE;
+        for (int i = 0; i < buffer.capacity(); i++) {
+            byte b = buffer.getByte(i);
+            System.out.println((char)b);
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            aMethod(0);
-        } catch (Exception ex) {
-            System.out.println("exception in main");
+    // 5.7 Read all data
+    public static void readAllData() {
+        ByteBuf buffer = HEAP_BUF_FROM_SOMEWHERE;
+        while (buffer.isReadable()) {
+            System.out.println(buffer.readByte());
         }
-        System.out.println("finished");
+    }
+
+    // 5.8 write data
+    public static void write() {
+        ByteBuf buffer = HEAP_BUF_FROM_SOMEWHERE;
+        while (buffer.writableBytes() >= 4) {
+            buffer.writeInt(RANDOM.nextInt());
+        }
+    }
+
+    // 5.9 Using ByteProcessor to find \r
+    public static void byteProcessor() {
+        ByteBuf byteBuffer = HEAP_BUF_FROM_SOMEWHERE;
+        byteBuffer.forEachByte(ByteProcessor.FIND_CR);
+    }
+
+    // 5.10 Slice a ByteBuf
+    public static void byteBufSlice() {
+        Charset utf8 = StandardCharsets.UTF_8;
+        ByteBuf buf = Unpooled.copiedBuffer("Netty in Action rocks!", utf8);
+        ByteBuf sliced = buf.slice(0, 15);
+        System.out.println(sliced.toString(utf8));
+        buf.setByte(0, (byte)'J');
+        assert buf.getByte(0) == sliced.getByte(0);
+    }
+
+    // 5.11 Copying a ByteBuf
+    public static void byteBufCopy() {
+        Charset utf8 = StandardCharsets.UTF_8;
+        ByteBuf buf = Unpooled.copiedBuffer("Netty in Action rocks!", utf8);
+        ByteBuf copy = buf.copy(0, 15);
+        System.out.println(copy.toString(utf8));
+        buf.setByte(0, (byte)'J');
+        assert buf.getByte(0) != copy.getByte(0);
+    }
+
+    // 5.12 get() and set() usage
+    public static void byteBufSetGet() {
+        Charset utf8 = StandardCharsets.UTF_8;
+        ByteBuf buf = Unpooled.copiedBuffer("Netty in Action rocks!", utf8);
+        System.out.println((char)buf.getByte(0));
+        int readerIndex = buf.readerIndex();
+        int writerIndex = buf.writerIndex();
+        buf.setByte(0, (byte)'B');
+        System.out.println((char)buf.getByte(0));
+        assert readerIndex == buf.readerIndex();
+        assert writerIndex == buf.writerIndex();
+    }
+
+    // 5.13 read() and write() operations on the ByteBuf
+    public static void byteBufWriteRead() {
+        Charset utf8 = StandardCharsets.UTF_8;
+        ByteBuf buf = Unpooled.copiedBuffer("Netty in Action rocks!", utf8);
+        System.out.println((char)buf.readByte());
+        int readerIndex = buf.readerIndex();
+        int writerIndex = buf.writerIndex();
+        buf.writeByte((byte)'?');
+        assert readerIndex == buf.readerIndex();
+        assert writerIndex != buf.writerIndex();
+    }
+
+    // 5.14 Obtaining a ByteBufAllocator reference
+    public static void obtainingByteBufAllocatorReference() {
+        Channel channel = CHANNEL_FROM_SOMEWHERE;
+        ByteBufAllocator alloc = channel.alloc();
+        //...
+        ChannelHandlerContext ctx = null; //AbstractChannelHandlerContext 实现类
+        ctx.alloc();
+
+    }
+
+    // 5.15 Reference counting
+    public static void referenceCounting() {
+        Channel channel = CHANNEL_FROM_SOMEWHERE;
+        ByteBufAllocator alloc = channel.alloc();
+        //...
+        ByteBuf byteBuf = alloc.directBuffer();
+        assert byteBuf.refCnt() == 1;
+    }
+
+    // 5.16 Release reference-counted object
+    public static void releaseReferenceCountedObject() {
+        ByteBuf buffer = HEAP_BUF_FROM_SOMEWHERE; //get reference form somewhere
+        boolean released = buffer.release();
+        //...
     }
 
 }
