@@ -15,3 +15,5 @@ netty实战学习笔记
 [第四章 传输](chapter4/src/chapter4.md)
 
 [第五章 ByteBuf](chapter5/src/chapter5.md)
+
+[第六章 ChannelHandler和ChannelPipeline](chapter6/src/chapter6.md)
