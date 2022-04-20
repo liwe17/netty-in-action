@@ -19,3 +19,5 @@ netty实战学习笔记
 [第六章 ChannelHandler和ChannelPipeline](chapter6/src/chapter6.md)
 
 [第七章 EventLoop和线程模型](chapter7/src/chapter7.md)
+
+[第八章 引导](chapter8/src/chapter8.md)
