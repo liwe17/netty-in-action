@@ -4,7 +4,9 @@ netty实战学习笔记
 
 - [书中源码](https://github.com/normanmaurer/netty-in-action)
 
-## 章节列表
+## 目录
+
+### 第一部分 Netty的概念及体系结构
 
 [第一章 Netty-异步和事件驱动](chapter1/src/chapter1.md)
 
@@ -21,3 +23,11 @@ netty实战学习笔记
 [第七章 EventLoop和线程模型](chapter7/src/chapter7.md)
 
 [第八章 引导](chapter8/src/chapter8.md)
+
+### 第二部分 编解码器
+
+### 第三部分 网络协议
+
+### 第四部分 案例研究
+
+### 附录 Maven介绍
