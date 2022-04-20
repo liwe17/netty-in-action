@@ -17,3 +17,5 @@ netty实战学习笔记
 [第五章 ByteBuf](chapter5/src/chapter5.md)
 
 [第六章 ChannelHandler和ChannelPipeline](chapter6/src/chapter6.md)
+
+[第七章 EventLoop和线程模型](chapter7/src/chapter7.md)
