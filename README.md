@@ -24,6 +24,8 @@ netty实战学习笔记
 
 [第八章 引导](chapter8/src/chapter8.md)
 
+[第九章 单元测试](chapter9/src/chapter9.md)
+
 ### 第二部分 编解码器
 
 ### 第三部分 网络协议
