@@ -58,3 +58,29 @@
 - 业务代码
     - com.weiliai.chapter9.FixedLengthFrameDecoder
     - com.weiliai.chapter9.FixedLengthDecoderTest
+
+### 测试出站消息
+
+- 用到的AbsIntegerEncoder:它是Netty的MessageToMessageEncoder的一个特殊化的实现,用于将负值整数转换为绝对值
+
+- 业务代码
+    - com.weiliai.chapter9.AbsIntegerEncode
+    - com.weiliai.chapter9.AbsIntegerEncodeTest
+
+### 测试异常处理
+
+- 应用程序通常需要执行比转换数据更加复杂的任务,可以选择在exceptionCaught()方法中处理该异常或者忽略它
+
+- 业务代码
+  - 
+
+
+
+
+
+
+
+
+
+
+
