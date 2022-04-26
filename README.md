@@ -30,6 +30,8 @@ netty实战学习笔记
 
 [第十章 编码器框架](chapter10/src/chapter10.md)
 
+[第十一章 预置的ChannelHandler和编解码器](chapter11/src/chapter11.md)
+
 ### 第三部分 网络协议
 
 ### 第四部分 案例研究
