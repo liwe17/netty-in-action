@@ -38,11 +38,99 @@
 
 ### 处理HTTP请求
 
+- 业务代码
+    - com.weiliai.chapter12.HttpRequestHandler
 
+### 处理WebSocket帧
 
+- WEBSOCKET帧: WebSocket以帧的方式传输数据,每一帧代表消息的一部分.一个完整的消息包含许多帧
 
+- WebSocketFrame类型
 
+<table>
+  <tr>
+    <td>名称</td>
+    <td>描述</td>
+  </tr>
+  <tr>
+    <td>BinaryWebSocketFrame</td>
+    <td>数据帧:二进制数据</td>
+  </tr>
+  <tr>
+    <td>TextWebSocketFrame</td>
+    <td>数据帧:文本数据</td>
+  </tr>
+  <tr>
+    <td>ContinuationWebSocketFrame</td>
+    <td>数据帧:属于上一个BinaryWebSocketFrame或TextWebSocketFrame的数据</td>
+  </tr>
+  <tr>
+    <td>CloseWebSocketFrame</td>
+    <td>控制帧:一个CLOSE请求,关闭的状态码以及关闭的原因</td>
+  </tr>
+  <tr>
+    <td>PingWebSocketFrame</td>
+    <td>控制帧:请一个PongWebSocketFrame</td>
+  </tr>
+  <tr>
+    <td>PongWebSocketFrame</td>
+    <td>控制帧:对PingWebSocketFrame请求的响应</td>
+  </tr>
+</table>
 
+- 聊天程序中使用下面几种帧类型
+    - CloseWebSocketFrame
+    - PingWebSocketFrame
+    - PongWebSocketFrame
+    - TextWebSocketFrame
+
+- TextWebSocketFrame是我们唯一真正需要处理的帧类型.Netty提供了WebSocketServerProtocolHandler来处理其他类型的帧
+
+- 业务代码
+    - com.weiliai.chapter12.TextWebSocketFrameHandler
+
+### 初始化ChannelPipeline
+
+- 基于WebSocket聊天服务器的ChannelHandler
+
+<table>
+  <tr>
+    <td>ChannelHandler</td>
+    <td>职责</td>
+  </tr>
+  <tr>
+    <td>HttpServerCodec</td>
+    <td>将字节解码为HttpRequest,HttpContent,LastHttpContent.并将HttpRequest,HttpContent,LastHttpContent编码为字节</td>
+  </tr>
+  <tr>
+    <td>ChunkedWriteHandler</td>
+    <td>写入一个文件的内容</td>
+  </tr>
+  <tr>
+    <td>HttpObjectAggregator</td>
+    <td>将一个HttpMessage和随它的多个HttpMessage聚合为单个FullHttpRequestResponse(取决于它是被用来处理请求还是响应).安装这个以后,ChannelPipline中的下一个ChannelHandler将只会收到完整的HTTP请求或响应</td>
+  </tr>
+  <tr>
+    <td>HttpRequestHandler</td>
+    <td>处理FullHttpRequest(那些不发送到/ws URI的请求)</td>
+  </tr>
+  <tr>
+    <td>WebSocketServerProtocolHandler</td>
+    <td>按照WebSocket规范的要求,处理WebSocket升级握手,PingWebSocketFrame,PongWebSocketFrame和CloseWebSocketFrame</td>
+  </tr>
+  <tr>
+    <td>TextWebSocketFrameHandler</td>
+    <td>处理TextWebSocketFrame和握手完成事件</td>
+  </tr>
+</table>
+
+- 业务代码
+    - com.weiliai.chapter12.ChatServerInitializer
+
+### 引导
+
+- 业务代码
+    - com.weiliai.chapter12.ChatServer
 
 
 
