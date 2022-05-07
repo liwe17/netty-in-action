@@ -36,6 +36,8 @@ netty实战学习笔记
 
 [第十二章 WebSocket](chapter12/src/chapter12.md)
 
+[第十三章 使用UDP广播事件](chapter13/src/chapter13.md)
+
 ### 第四部分 案例研究
 
 ### 附录 Maven介绍
