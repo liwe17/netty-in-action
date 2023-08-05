@@ -41,3 +41,7 @@ netty实战学习笔记
 ### 第四部分 案例研究
 
 ### 附录 Maven介绍
+
+### 黑马程序员课程netty学习
+
+[第十四章 Netty视频学习](chapter14/src/chapter14.md)
